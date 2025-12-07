@@ -1,3 +1,12 @@
+# Screenshot
+<img width="626" height="857" alt="image" src="https://github.com/user-attachments/assets/5b57187c-2e06-4f88-bf35-d0654dcf1dd7" />
+
+# Explorer Link & Contract Address
+
+Network: devnet
+Package ID: 0xf125cefba8ca4c583b120ff6decba0b2c4874f5efc75a2009230723c9f64d202
+Explorer: https://explorer.iota.org/object/0xf125cefba8ca4c583b120ff6decba0b2c4874f5efc75a2009230723c9f64d202?network=devnet
+
 # 🧠 Daily Trivia DApp  
 **On-Chain Daily Quiz Game on IOTA (Move + Next.js)**
 
