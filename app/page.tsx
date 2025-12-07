@@ -1,65 +1,124 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import {
+  Container,
+  Heading,
+  Text,
+  Button,
+  Flex,
+} from "@radix-ui/themes";
+import { ConnectButton } from "@iota/dapp-kit";
+import { useDailyTrivia } from "@/hooks/useDailyTrivia";
+import { useState } from "react";
+
+const options = [
+  "Thủ đô của Việt Nam là gì?",
+  "Hà Nội",
+  "TP. Hồ Chí Minh",
+  "Đà Nẵng",
+  "Huế",
+];
+
+export default function TriviaPage() {
+  const { account, isLoading, txHash, error, lastResult, answerTrivia } =
+    useDailyTrivia();
+  const [selected, setSelected] = useState<number | null>(null);
+
+  const handleSubmit = async () => {
+    if (selected === null) return;
+    await answerTrivia(selected);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <main>
+      <Container
+        style={{ maxWidth: "800px", margin: "0 auto", padding: "2rem 0" }}
+      >
+        <header
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "2rem",
+          }}
+        >
+          <Heading size="6">🧠 Daily Trivia DApp</Heading>
+          <ConnectButton />
+        </header>
+
+        {!account && (
+          <Text>Hãy kết nối ví IOTA để tham gia trả lời.</Text>
+        )}
+
+        {account && (
+          <>
+            <Text
+              style={{
+                marginBottom: "1rem",
+                display: "block",
+                fontFamily: "monospace",
+              }}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              Ví: {account.address}
+            </Text>
+
+            <Heading size="4" style={{ marginBottom: "1rem" }}>
+              {options[0]}
+            </Heading>
+
+            <Flex direction="column" gap="2">
+              {options.slice(1).map((opt, idx) => (
+                <Button
+                  key={idx}
+                  variant={selected === idx ? "solid" : "outline"}
+                  onClick={() => setSelected(idx)}
+                  disabled={isLoading}
+                >
+                  {String.fromCharCode(65 + idx)}. {opt}
+                </Button>
+              ))}
+            </Flex>
+
+            <Button
+              style={{ marginTop: "1.5rem" }}
+              onClick={handleSubmit}
+              disabled={selected === null || isLoading}
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+              {isLoading ? "Đang gửi..." : "Gửi đáp án"}
+            </Button>
+
+            {lastResult === "correct" && (
+              <Text style={{ color: "var(--green-11)", marginTop: "1rem" }}>
+                🎉 Chính xác! Bạn đã nhận được 1 Flag.
+              </Text>
+            )}
+            {lastResult === "wrong" && (
+              <Text style={{ color: "var(--red-11)", marginTop: "1rem" }}>
+                😢 Chưa đúng rồi, thử lại câu tiếp theo nhé!
+              </Text>
+            )}
+
+            {txHash && (
+              <Text
+                size="1"
+                style={{
+                  display: "block",
+                  marginTop: "1rem",
+                  fontFamily: "monospace",
+                }}
+              >
+                Tx Hash: {txHash}
+              </Text>
+            )}
+
+            {error && (
+              <Text style={{ color: "var(--red-11)", marginTop: "1rem" }}>
+                Error: {error.message}
+              </Text>
+            )}
+          </>
+        )}
+      </Container>
+    </main>
   );
 }
