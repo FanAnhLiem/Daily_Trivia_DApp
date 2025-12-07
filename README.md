@@ -1,5 +1,6 @@
 # Screenshot
-<img width="626" height="857" alt="image" src="https://github.com/user-attachments/assets/5b57187c-2e06-4f88-bf35-d0654dcf1dd7" />
+
+<img width="1919" height="871" alt="image" src="https://github.com/user-attachments/assets/8858e0d4-fe80-46ae-a3f3-2541bee1f73c" />
 
 # Explorer Link & Contract Address
 
