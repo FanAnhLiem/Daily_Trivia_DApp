@@ -1,8 +1,7 @@
----
+
 
 # ✅ README 2 — **Daily Trivia DApp**
 
-```md
 # 🧠 Daily Trivia DApp (On-Chain Quiz Game on IOTA)
 
 Daily Trivia is an on-chain quiz game built on **IOTA Devnet** using **Move** smart contracts and a **Next.js** frontend.
